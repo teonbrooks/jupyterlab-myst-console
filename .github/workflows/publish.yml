@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyterlab hatch build
-          jlpm install --no-immutable
+          jlpm install
 
       - name: Verify tag matches package version
         run: |
