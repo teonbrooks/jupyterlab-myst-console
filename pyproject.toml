@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling>=1.5.0", "jupyterlab>=4.0.0,<5", "hatch-nodejs-version>=0.3.2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jupyterlab_myst_console"
+version = "0.1.0"
+description = "MyST Markdown syntax highlighting and console runner extension for JupyterLab"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+authors = [
+  { name = "Teon L Brooks", email = "teon.brooks@gmail.com" }
+]
+classifiers = [
+  "Framework :: Jupyter",
+  "Framework :: Jupyter :: JupyterLab",
+  "Framework :: Jupyter :: JupyterLab :: 4",
+  "Framework :: Jupyter :: JupyterLab :: Extensions",
+  "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+]
+dependencies = ["jupyterlab>=4.0.0,<5.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/teonbrooks/jupyterlab-myst-console"
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyterlab_myst_console/labextension" = "share/jupyter/labextensions/jupyterlab-myst-console"
+"install.json" = "share/jupyter/labextensions/jupyterlab-myst-console/install.json"
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["jupyterlab_myst_console/labextension"]
+exclude = [".github", "binder"]
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+  "jupyterlab_myst_console/labextension/static/style.js",
+  "jupyterlab_myst_console/labextension/package.json",
+]
+skip-if-exists = ["jupyterlab_myst_console/labextension/static/style.js"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
+npm = ["jlpm"]
+source_dir = "src"
+build_dir = "jupyterlab_myst_console/labextension"
+
+[tool.jupyter-releaser.options]
+version-cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+before-bump-version = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "jlpm"]
+before-release = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "jlpm", "jlpm build:prod"]

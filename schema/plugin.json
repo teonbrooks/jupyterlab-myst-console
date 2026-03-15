@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "jupyter.lab.setting-icon": "ui-components:settings",
+  "jupyter.lab.setting-icon-label": "MyST Console",
+  "title": "MyST Console",
+  "description": "Settings for the MyST Markdown code runner extension",
+  "properties": {
+    "executableLanguages": {
+      "title": "Executable Languages",
+      "description": "Language info-string tags that show a run button in fenced code blocks.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "python",
+        "py",
+        "javascript",
+        "js",
+        "typescript",
+        "ts",
+        "r",
+        "julia",
+        "scala",
+        "ruby",
+        "bash",
+        "sh",
+        "zsh"
+      ]
+    },
+    "defaultKernelName": {
+      "title": "Default Kernel",
+      "description": "Kernel name to start when creating a new console. Leave empty to prompt the user.",
+      "type": "string",
+      "default": "python3"
+    },
+    "reuseConsole": {
+      "title": "Reuse Console",
+      "description": "Reuse an existing console for the same file rather than creating a new one each time.",
+      "type": "boolean",
+      "default": true
+    },
+    "activateConsole": {
+      "title": "Activate Console on Run",
+      "description": "Bring the console panel into view when code is executed (without stealing keyboard focus from the editor).",
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "additionalProperties": false,
+  "type": "object"
+}

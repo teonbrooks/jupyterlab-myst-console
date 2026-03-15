@@ -1,0 +1,22 @@
+# Python packaging
+jupyterlab_myst_console/
+pyproject.toml
+MANIFEST.in
+install.json
+
+# Source (only ship compiled lib/)
+src/
+tsconfig*.json
+
+# Dev tooling
+.eslintrc*
+.prettierrc*
+node_modules/
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Jupyter build artifacts
+*.tsbuildinfo
