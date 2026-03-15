@@ -37,7 +37,7 @@ jobs:
       - name: Stamp dev version
         run: |
           BASE=$(python -c "from jupyterlab_myst_console._version import __version__; print(__version__)")
-          DEV_VERSION="${BASE}.${{ github.event.inputs.version_suffix }}"
+          DEV_VERSION="${BASE}.${{ github.event.inputs.version_suffix }}"  # e.g. 0.1.0.dev0
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV
           # Patch _version.py
           sed -i "s/__version__ = \".*\"/__version__ = \"$DEV_VERSION\"/" jupyterlab_myst_console/_version.py

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          pip install jupyterlab hatch build
+          npm install -g yarn
+          jlpm install
+
+      - name: Build extension
+        run: jlpm build:prod
+
+      - name: Build Python package
+        run: python -m build
+
+      - name: Verify package contents
+        run: |
+          pip install dist/*.whl
+          jupyter labextension list 2>&1 | grep jupyterlab-myst-console
