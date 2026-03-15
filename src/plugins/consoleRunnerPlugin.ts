@@ -11,6 +11,7 @@ import { MystConsoleManager } from '../console';
 
 const PLUGIN_ID = 'jupyterlab-myst-console:runner';
 const RUN_SELECTED_COMMAND = 'jupyterlab-myst-console:run-selected-blocks';
+const RUN_CELL_AND_ADVANCE_COMMAND = 'jupyterlab-myst-console:run-cell-and-advance';
 
 /**
  * Bridges gutter run-button clicks (CustomEvent on the editor DOM) with
@@ -160,6 +161,57 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
           }
         }
       }
+    });
+
+    // -----------------------------------------------------------------------
+    // Run-cell-and-advance command: run entire block, jump to next block
+    // -----------------------------------------------------------------------
+    app.commands.addCommand(RUN_CELL_AND_ADVANCE_COMMAND, {
+      label: 'Run Cell and Advance',
+      caption: 'Run the entire code block under the cursor and move to the next block',
+      isEnabled: () => {
+        const widget = editorTracker.currentWidget;
+        return !!widget && widget.context.path.endsWith('.md');
+      },
+      execute: async () => {
+        const widget = editorTracker.currentWidget;
+        if (!widget || !widget.context.path.endsWith('.md')) return;
+
+        const filePath = widget.context.path;
+        const codeEditor = widget.content.editor;
+        const cmView = (codeEditor as any).editor as EditorView | undefined;
+        if (!cmView) return;
+
+        const cursorPos = cmView.state.selection.main.from;
+        const allBlocks = findCodeBlocks(cmView.state);
+        const blockIndex = allBlocks.findIndex(
+          b => b.contentFrom <= cursorPos && b.contentTo >= cursorPos
+        );
+        if (blockIndex === -1) return;
+
+        const block = allBlocks[blockIndex];
+        const nextBlock = allBlocks[blockIndex + 1];
+
+        // Advance cursor to the start of the next block's content, or just
+        // past the current block's closing fence if there is no next block.
+        const nextPos = nextBlock
+          ? nextBlock.contentFrom
+          : Math.min(block.to + 1, cmView.state.doc.length);
+
+        cmView.dispatch({ selection: { anchor: nextPos } });
+
+        if (block.content.trim()) {
+          await runBlock(consoleManager, filePath, block.content, block.language, editorTracker);
+        }
+
+        cmView.focus();
+      }
+    });
+
+    app.commands.addKeyBinding({
+      command: RUN_CELL_AND_ADVANCE_COMMAND,
+      keys: ['Shift Enter'],
+      selector: '.jp-FileEditor'
     });
 
     // Keybinding: Cmd+Enter on Mac / Ctrl+Enter on Windows & Linux,

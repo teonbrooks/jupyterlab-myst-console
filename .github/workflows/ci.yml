@@ -23,13 +23,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: |
-          pip install jupyterlab hatch build
-          jlpm install
+      - name: Install JS dependencies
+        run: npm install
+
+      - name: Install Python dependencies
+        run: pip install jupyterlab hatch build
 
       - name: Build extension
-        run: jlpm build:prod
+        run: npm run build:prod
 
       - name: Build Python package
         run: python -m build

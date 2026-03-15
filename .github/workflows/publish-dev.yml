@@ -30,23 +30,23 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: |
-          pip install jupyterlab hatch build
-          jlpm install
+      - name: Install JS dependencies
+        run: npm install
+
+      - name: Install Python dependencies
+        run: pip install jupyterlab hatch build
 
       - name: Stamp dev version
         run: |
           BASE=$(python -c "from jupyterlab_myst_console._version import __version__; print(__version__)")
-          DEV_VERSION="${BASE}.${{ github.event.inputs.version_suffix }}"  # e.g. 0.1.0.dev0
+          SUFFIX="${{ github.event.inputs.version_suffix || 'dev0' }}"
+          DEV_VERSION="${BASE}.${SUFFIX}"
           echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV
-          # Patch _version.py
           sed -i "s/__version__ = \".*\"/__version__ = \"$DEV_VERSION\"/" jupyterlab_myst_console/_version.py
-          # Patch package.json
           jq ".version = \"$DEV_VERSION\"" package.json > package.json.tmp && mv package.json.tmp package.json
 
       - name: Build extension
-        run: jlpm build:prod
+        run: npm run build:prod
 
       - name: Build Python package
         run: python -m build
