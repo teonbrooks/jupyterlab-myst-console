@@ -13,7 +13,9 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    environment: pypi
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/jupyterlab-myst-console
     permissions:
       id-token: write  # required for PyPI trusted publishing
 
@@ -30,11 +32,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Python dependencies
+        run: pip install -U "jupyterlab>=4.0.0,<5" build          
+
       - name: Install JS dependencies
         run: npm install
-
-      - name: Install Python dependencies
-        run: pip install jupyterlab hatch build
 
       - name: Stamp dev version
         run: |
