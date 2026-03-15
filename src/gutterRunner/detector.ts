@@ -51,7 +51,7 @@ export function findCodeBlocks(
 
   tree.iterate({
     enter(node) {
-      if (node.name !== 'FencedCode') return;
+      if (node.name !== 'FencedCode') {return;}
 
       // CodeInfo child contains the language tag (the part after the opening ```)
       const infoNode = node.node.getChild('CodeInfo');
@@ -59,7 +59,7 @@ export function findCodeBlocks(
         ? state.doc.sliceString(infoNode.from, infoNode.to).trim().toLowerCase()
         : '';
 
-      if (!executableLanguages.has(language)) return;
+      if (!executableLanguages.has(language)) {return;}
 
       // CodeText child contains the actual code body
       const bodyNode = node.node.getChild('CodeText');

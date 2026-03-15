@@ -40,7 +40,7 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
         .then(settings => {
           const updateSettings = () => {
             const kernelName = settings.get('defaultKernelName').composite as string;
-            if (kernelName) defaultKernelName = kernelName;
+            if (kernelName) {defaultKernelName = kernelName;}
           };
           settings.changed.connect(updateSettings);
           updateSettings();
@@ -64,7 +64,7 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
     // -----------------------------------------------------------------------
     const attachListener = (widget: IDocumentWidget<FileEditor>) => {
       const filePath = widget.context.path;
-      if (!filePath.endsWith('.md')) return;
+      if (!filePath.endsWith('.md')) {return;}
 
       widget.node.addEventListener(MYST_RUN_EVENT, (event: Event) => {
         const { blockInfo } = (event as CustomEvent<IMystRunEvent>).detail;
@@ -92,7 +92,7 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
       },
       execute: async () => {
         const widget = editorTracker.currentWidget;
-        if (!widget || !widget.context.path.endsWith('.md')) return;
+        if (!widget || !widget.context.path.endsWith('.md')) {return;}
 
         const filePath = widget.context.path;
         const codeEditor = widget.content.editor;
@@ -122,7 +122,7 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
           const containingBlock = allBlocksForCursor.find(
             b => b.contentFrom <= cursorPos && b.contentTo >= cursorPos
           );
-          if (!containingBlock) return;
+          if (!containingBlock) {return;}
 
           const line = cmView.state.doc.lineAt(cursorPos);
           const nextPos = Math.min(line.to + 1, cmView.state.doc.length);
@@ -146,8 +146,8 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
         for (const sel of selectionRanges) {
           const seen = new Set<number>();
           for (const block of allBlocks) {
-            if (seen.has(block.from)) continue;
-            if (block.contentFrom > sel.to || block.contentTo < sel.from) continue;
+            if (seen.has(block.from)) {continue;}
+            if (block.contentFrom > sel.to || block.contentTo < sel.from) {continue;}
             seen.add(block.from);
 
             // Clamp the selection to the block's content bounds (excludes fence lines).
@@ -175,19 +175,19 @@ export const consoleRunnerPlugin: JupyterFrontEndPlugin<IMystConsoleManager> = {
       },
       execute: async () => {
         const widget = editorTracker.currentWidget;
-        if (!widget || !widget.context.path.endsWith('.md')) return;
+        if (!widget || !widget.context.path.endsWith('.md')) {return;}
 
         const filePath = widget.context.path;
         const codeEditor = widget.content.editor;
         const cmView = (codeEditor as any).editor as EditorView | undefined;
-        if (!cmView) return;
+        if (!cmView) {return;}
 
         const cursorPos = cmView.state.selection.main.from;
         const allBlocks = findCodeBlocks(cmView.state);
         const blockIndex = allBlocks.findIndex(
           b => b.contentFrom <= cursorPos && b.contentTo >= cursorPos
         );
-        if (blockIndex === -1) return;
+        if (blockIndex === -1) {return;}
 
         const block = allBlocks[blockIndex];
         const nextBlock = allBlocks[blockIndex + 1];
@@ -277,7 +277,7 @@ async function syncKernelLanguage(
   panel: import('@jupyterlab/console').ConsolePanel
 ): Promise<void> {
   const kernel = panel.sessionContext.session?.kernel;
-  if (!kernel) return;
+  if (!kernel) {return;}
 
   let language = '';
   try {
@@ -288,12 +288,12 @@ async function syncKernelLanguage(
   }
 
   const editorWidget = editorTracker.find(w => w.context.path === filePath);
-  if (!editorWidget) return;
+  if (!editorWidget) {return;}
 
   const cmView = (editorWidget.content.editor as any)?.editor as
     | EditorView
     | undefined;
-  if (!cmView) return;
+  if (!cmView) {return;}
 
   cmView.dispatch({ effects: kernelLanguageEffect.of(language) });
 }

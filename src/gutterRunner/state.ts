@@ -19,7 +19,7 @@ export const kernelLanguageField = StateField.define<string>({
   create: () => '',
   update(value, tr) {
     for (const effect of tr.effects) {
-      if (effect.is(kernelLanguageEffect)) return effect.value;
+      if (effect.is(kernelLanguageEffect)) {return effect.value;}
     }
     return value;
   }
@@ -56,7 +56,7 @@ export function normalizeBlockLanguage(tag: string): string {
  * kernel language. An empty kernelLanguage (no kernel yet) enables all buttons.
  */
 export function isLanguageEnabled(blockLang: string, kernelLang: string): boolean {
-  if (!kernelLang) return true;
+  if (!kernelLang) {return true;}
   return normalizeBlockLanguage(blockLang) === kernelLang.toLowerCase();
 }
 

@@ -49,15 +49,15 @@ export const runButtonGutter: Extension = gutter({
         ? target
         : (target.closest('.cm-myst-run-button') as HTMLElement | null);
 
-      if (!button) return false;
+      if (!button) {return false;}
 
       // Consume the click but do nothing if the button is disabled
-      if (button.hasAttribute('disabled')) return true;
+      if (button.hasAttribute('disabled')) {return true;}
 
       const markers = view.state.field(codeBlockField);
       const blockInfo = findBlockAtPos(markers, line.from);
 
-      if (!blockInfo) return false;
+      if (!blockInfo) {return false;}
 
       // Dispatch a bubbling CustomEvent so the JupyterLab plugin layer
       // can listen on the widget's DOM node — no StateEffect/appendConfig needed.

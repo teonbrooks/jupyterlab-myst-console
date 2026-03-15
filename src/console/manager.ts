@@ -34,10 +34,10 @@ export class MystConsoleManager implements IMystConsoleManager {
    */
   async getConsole(filePath: string): Promise<ConsolePanel> {
     const inFlight = this._inFlight.get(filePath);
-    if (inFlight) return inFlight;
+    if (inFlight) {return inFlight;}
 
     const existing = this._findExistingConsole(filePath);
-    if (existing) return existing;
+    if (existing) {return existing;}
 
     const promise = this._createConsole(filePath);
     this._inFlight.set(filePath, promise);

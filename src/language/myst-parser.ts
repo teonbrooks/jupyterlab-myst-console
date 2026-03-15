@@ -27,7 +27,7 @@ const mystDirectiveParser: MarkdownConfig = {
       parse(cx, line) {
         // Match opening fence: 3+ colons followed by {name}
         const openMatch = line.text.match(/^(:{3,})\{([^}]+)\}/);
-        if (!openMatch) return false;
+        if (!openMatch) {return false;}
 
         const fenceLen = openMatch[1].length;
         const closingFence = ':'.repeat(fenceLen);
@@ -91,11 +91,11 @@ const mystRoleParser: MarkdownConfig = {
       name: 'MystRole',
       parse(cx, next, pos) {
         // Match {role}`content`
-        if (next !== 123 /* { */) return -1;
+        if (next !== 123 /* { */) {return -1;}
 
         const text = cx.slice(pos, cx.end);
         const roleMatch = text.match(/^\{([^}]+)\}`([^`]*)`/);
-        if (!roleMatch) return -1;
+        if (!roleMatch) {return -1;}
 
         const fullLen = roleMatch[0].length;
         return cx.addElement(
