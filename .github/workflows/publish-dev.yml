@@ -1,0 +1,54 @@
+name: Publish Dev Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_suffix:
+        description: 'Dev suffix (e.g. dev0, dev1, alpha1)'
+        required: false
+        default: 'dev0'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # required for PyPI trusted publishing
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jlpm and build dependencies
+        run: |
+          pip install jupyterlab hatch build
+          npm install -g yarn
+          jlpm install
+
+      - name: Stamp dev version
+        run: |
+          BASE=$(python -c "from jupyterlab_myst_console._version import __version__; print(__version__)")
+          DEV_VERSION="${BASE}.${{ github.event.inputs.version_suffix }}"
+          echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV
+          # Patch _version.py
+          sed -i "s/__version__ = \".*\"/__version__ = \"$DEV_VERSION\"/" jupyterlab_myst_console/_version.py
+          # Patch package.json
+          jq ".version = \"$DEV_VERSION\"" package.json > package.json.tmp && mv package.json.tmp package.json
+
+      - name: Build extension
+        run: jlpm build:prod
+
+      - name: Build Python package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
