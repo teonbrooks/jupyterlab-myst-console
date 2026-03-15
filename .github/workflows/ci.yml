@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyterlab hatch build
-          jlpm install
+          jlpm install --no-immutable
 
       - name: Build extension
         run: jlpm build:prod
