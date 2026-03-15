@@ -28,7 +28,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install jupyterlab hatch build
-          npm install -g yarn
           jlpm install
 
       - name: Verify tag matches package version

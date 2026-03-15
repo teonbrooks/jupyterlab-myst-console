@@ -28,10 +28,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install jlpm and build dependencies
+      - name: Install dependencies
         run: |
           pip install jupyterlab hatch build
-          npm install -g yarn
           jlpm install
 
       - name: Stamp dev version
