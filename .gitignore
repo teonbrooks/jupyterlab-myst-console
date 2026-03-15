@@ -1,6 +1,7 @@
 # ── Node ──────────────────────────────────────────────────────────────────────
 node_modules/
-.yarn/
+.yarn/cache
+.yarn/install-state.gz
 
 # ── TypeScript build output ───────────────────────────────────────────────────
 lib/
