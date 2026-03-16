@@ -46,11 +46,11 @@ skip-if-exists = ["jupyterlab_myst_console/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:prod"
-npm = ["jlpm"]
+npm = ["npm"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
 build_cmd = "install:extension"
-npm = ["jlpm"]
+npm = ["npm"]
 source_dir = "src"
 build_dir = "jupyterlab_myst_console/labextension"
 
@@ -58,5 +58,5 @@ build_dir = "jupyterlab_myst_console/labextension"
 version-cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
-before-bump-version = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "jlpm"]
-before-release = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "jlpm", "jlpm build:prod"]
+before-bump-version = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "npm install"]
+before-release = ["python -m pip install 'jupyterlab>=4.0.0,<5'", "npm install", "npm run build:prod"]
