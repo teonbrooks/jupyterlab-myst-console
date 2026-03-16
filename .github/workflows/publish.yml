@@ -25,11 +25,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install JS dependencies
-        run: npm install
-
       - name: Install Python dependencies
         run: pip install jupyterlab hatch build
+
+      - name: Install JS dependencies
+        run: jlpm install
 
       - name: Verify tag matches package version
         run: |

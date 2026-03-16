@@ -33,10 +33,10 @@ jobs:
           node-version: '20'
 
       - name: Install Python dependencies
-        run: pip install -U "jupyterlab>=4.0.0,<5" build          
+        run: pip install -U "jupyterlab>=4.0.0,<5" build
 
       - name: Install JS dependencies
-        run: npm install
+        run: jlpm install
 
       - name: Stamp dev version
         run: |
